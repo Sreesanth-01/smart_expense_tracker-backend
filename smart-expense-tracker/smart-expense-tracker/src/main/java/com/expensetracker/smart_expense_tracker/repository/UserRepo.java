@@ -7,5 +7,7 @@ import com.expensetracker.smart_expense_tracker.model.User;
 
 @Repository
 public interface UserRepo extends JpaRepository<User,Long> {
+
+    boolean existsByEmail(String email);
     
 }
