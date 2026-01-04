@@ -1,5 +1,7 @@
 package com.expensetracker.smart_expense_tracker.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +11,7 @@ import com.expensetracker.smart_expense_tracker.model.User;
 public interface UserRepo extends JpaRepository<User,Long> {
 
     boolean existsByEmail(String email);
+
+    Optional<User> findByEmail(String email);
     
 }
