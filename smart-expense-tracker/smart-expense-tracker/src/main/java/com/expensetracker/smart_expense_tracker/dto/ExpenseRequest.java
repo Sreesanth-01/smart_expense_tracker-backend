@@ -1,0 +1,16 @@
+package com.expensetracker.smart_expense_tracker.dto;
+
+import java.time.LocalDate;
+
+import lombok.Data;
+
+@Data
+public class ExpenseRequest {
+    private double amount;
+
+    private String category;
+
+    private LocalDate date;
+
+    private String description;
+}
