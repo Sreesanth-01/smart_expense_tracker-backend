@@ -12,4 +12,6 @@ public interface ExpenseService {
     List<Expense> getExpenses(String email);
     
     Expense updateExpense(long id,String email,UpdateExpenseRequest request);
+
+    void deleteExpense(long id,String email);
 }
