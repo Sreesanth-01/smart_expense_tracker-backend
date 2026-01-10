@@ -4,10 +4,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
+import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
 import com.expensetracker.smart_expense_tracker.model.Expense;
 import com.expensetracker.smart_expense_tracker.model.User;
 import com.expensetracker.smart_expense_tracker.repository.ExpenseRepo;
 import com.expensetracker.smart_expense_tracker.repository.UserRepo;
+
+
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
@@ -41,5 +44,26 @@ public class ExpenseServiceImpl implements ExpenseService {
         User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
 
         return expenseRepo.findByUser(user);
+    }
+
+    @Override
+    public Expense updateExpense(long id,String email,UpdateExpenseRequest request){
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        Expense expense = expenseRepo.findByIdAndUser(id,user).orElseThrow(()-> new RuntimeException("Expense not found"));
+
+        if(request.getAmount() != null){
+            expense.setAmount(request.getAmount());
+        }
+        if(request.getCategory()!=null){
+            expense.setCategory(request.getCategory());
+        }
+        if(request.getDate()!=null){
+            expense.setDate(request.getDate());
+        }
+        if(request.getDescription()!=null){
+            expense.setDescription(request.getDescription());
+        }
+
+        return expenseRepo.save(expense);
     }
 }

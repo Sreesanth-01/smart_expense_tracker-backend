@@ -3,14 +3,17 @@ package com.expensetracker.smart_expense_tracker.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
+import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
 import com.expensetracker.smart_expense_tracker.model.Expense;
 import com.expensetracker.smart_expense_tracker.service.ExpenseServiceImpl;
 
@@ -25,26 +28,24 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addExpense(@RequestBody ExpenseRequest request){
-
-        String email =(String) SecurityContextHolder    //This gets the email from JWT to add/display expenses of corresponding user
-                                .getContext()
-                                .getAuthentication()
-                                .getPrincipal();
+    public ResponseEntity<String> addExpense(@RequestBody ExpenseRequest request, @AuthenticationPrincipal String email){
 
         expenseService.addExpense(request, email);
         return ResponseEntity.ok("Expense added successfully");
     }
 
     @GetMapping
-    public ResponseEntity<List<Expense>> getExpenses(){
+    public ResponseEntity<List<Expense>> getExpenses(@AuthenticationPrincipal String email){
 
-         String email =(String) SecurityContextHolder
-                                .getContext()
-                                .getAuthentication()
-                                .getPrincipal();
         
         List<Expense> list = expenseService.getExpenses(email);
         return ResponseEntity.ok(list);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateExpense(@PathVariable long id, @RequestBody UpdateExpenseRequest request, @AuthenticationPrincipal String email){
+        expenseService.updateExpense(id, email, request);
+
+        return ResponseEntity.ok("Update Successfull");
     }
 }

@@ -1,6 +1,7 @@
 package com.expensetracker.smart_expense_tracker.security;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if(jwtUtil.validateToken(token)){
                 String email = jwtUtil.extractEmail(token);
                 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email,null,null); //email,password(already authenticated),role(later)
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email,null,List.of()); //email,password(already authenticated),role(later)
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); //Not mandatory but good practice.(sets Ip address and other details if needed)
 

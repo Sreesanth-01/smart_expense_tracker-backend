@@ -3,6 +3,7 @@ package com.expensetracker.smart_expense_tracker.service;
 import java.util.List;
 
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
+import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
 import com.expensetracker.smart_expense_tracker.model.Expense;
 
 public interface ExpenseService {
@@ -10,4 +11,5 @@ public interface ExpenseService {
 
     List<Expense> getExpenses(String email);
     
+    Expense updateExpense(long id,String email,UpdateExpenseRequest request);
 }
