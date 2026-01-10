@@ -2,6 +2,8 @@ package com.expensetracker.smart_expense_tracker.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
@@ -40,11 +42,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> getExpenses(String email){
+    public Page<Expense> getExpenses(String email,Pageable pageable){
 
         User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
 
-        return expenseRepo.findByUser(user);
+        return expenseRepo.findByUser(user,pageable);
     }
 
     @Override

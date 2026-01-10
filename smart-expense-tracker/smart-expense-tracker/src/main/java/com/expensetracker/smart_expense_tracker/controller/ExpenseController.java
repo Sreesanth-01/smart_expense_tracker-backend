@@ -3,6 +3,9 @@ package com.expensetracker.smart_expense_tracker.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +24,7 @@ import com.expensetracker.smart_expense_tracker.model.Expense;
 import com.expensetracker.smart_expense_tracker.service.ExpenseServiceImpl;
 
 @RestController
-@RequestMapping("/api/expense")
+@RequestMapping("/api/expenses")
 public class ExpenseController {
     
     private final ExpenseServiceImpl expenseService;
@@ -38,11 +41,11 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Expense>> getExpenses(@AuthenticationPrincipal String email){
+    public ResponseEntity<Page<Expense>> getExpenses(@AuthenticationPrincipal String email,Pageable pageable){
 
         
-        List<Expense> list = expenseService.getExpenses(email);
-        return ResponseEntity.ok(list);
+        Page<Expense> page = expenseService.getExpenses(email,pageable);
+        return ResponseEntity.ok(page);
     }
 
     @PutMapping("/{id}")
