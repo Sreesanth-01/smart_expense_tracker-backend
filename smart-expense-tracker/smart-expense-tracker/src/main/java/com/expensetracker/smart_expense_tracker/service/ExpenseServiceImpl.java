@@ -1,4 +1,5 @@
 package com.expensetracker.smart_expense_tracker.service;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -73,5 +74,13 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense expense = expenseRepo.findByIdAndUser(id, user).orElseThrow(()-> new RuntimeException("User not found"));
 
         expenseRepo.delete(expense);
+    }
+
+    @Override
+    public List<Expense> getExpensesByDateRange(String email,LocalDate startDate,LocalDate endDate){
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        List<Expense> list = expenseRepo.findByUserAndDateBetween(user,startDate,endDate);
+
+        return list;
     }
 }

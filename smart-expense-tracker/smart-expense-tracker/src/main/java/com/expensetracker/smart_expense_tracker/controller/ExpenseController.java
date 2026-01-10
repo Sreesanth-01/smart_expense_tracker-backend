@@ -1,5 +1,6 @@
 package com.expensetracker.smart_expense_tracker.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
@@ -55,5 +57,10 @@ public class ExpenseController {
         expenseService.deleteExpense(id, email);
 
         return ResponseEntity.ok("Deleted successfully");
+    }
+
+    @GetMapping("/date-range")
+    public ResponseEntity<List<Expense>> getByDateRange(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate,@AuthenticationPrincipal String email){
+        return ResponseEntity.ok(expenseService.getExpensesByDateRange(email, startDate, endDate));
     }
 }

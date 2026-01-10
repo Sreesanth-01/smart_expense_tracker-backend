@@ -1,5 +1,6 @@
 package com.expensetracker.smart_expense_tracker.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,8 @@ public interface ExpenseRepo extends JpaRepository<Expense,Long>{
     List<Expense> findByUser(User user);
 
     Optional<Expense> findByIdAndUser(long id, User user);
+
+    List<Expense> findByUserAndDateBetween(User user, LocalDate starDate, LocalDate endDate);
 
     
 }
