@@ -63,4 +63,9 @@ public class ExpenseController {
     public ResponseEntity<List<Expense>> getByDateRange(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate,@AuthenticationPrincipal String email){
         return ResponseEntity.ok(expenseService.getExpensesByDateRange(email, startDate, endDate));
     }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<Expense>> getByCategory(@PathVariable String category, @AuthenticationPrincipal String email){
+        return ResponseEntity.ok(expenseService.getExpensesByCategory(email, category));
+    }
 }

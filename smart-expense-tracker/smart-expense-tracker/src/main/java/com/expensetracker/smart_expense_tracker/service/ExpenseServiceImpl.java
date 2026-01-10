@@ -83,4 +83,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         return list;
     }
+
+    @Override
+    public List<Expense> getExpensesByCategory(String email,String category){
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        List<Expense> list = expenseRepo.findByUserAndCategory(user,category);
+
+        return list;
+    }
 }

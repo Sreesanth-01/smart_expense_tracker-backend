@@ -17,4 +17,6 @@ public interface ExpenseService {
     void deleteExpense(long id,String email);
 
     List<Expense> getExpensesByDateRange(String email,LocalDate startDate,LocalDate endDate);
+
+    List<Expense> getExpensesByCategory(String email,String category);
 }
