@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.expensetracker.smart_expense_tracker.dto.CategorySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
 import com.expensetracker.smart_expense_tracker.dto.MonthlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
@@ -125,5 +126,17 @@ public class ExpenseServiceImpl implements ExpenseService {
             : totalAmount/12;
         
             return new YearlySummaryResponse(totalAmount, totalTransactions, averageMonthly);
+    }
+
+    @Override
+    public List<CategorySummaryResponse> getCategorySummary(String email){
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        List<Object[]> rows = expenseRepo.getCategorySummary(user);
+
+        return rows.stream()                                //stream() is modern version of for each loop.
+                .map(row -> new CategorySummaryResponse(    //map() converts each value into something else.
+                    (String) row[0],                        //here,each row is converted to a CategorySummaryResponse dto.
+                    ((Number) row[1]).doubleValue()
+                )).toList();
     }
 }

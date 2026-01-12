@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.expensetracker.smart_expense_tracker.dto.CategorySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
 import com.expensetracker.smart_expense_tracker.dto.MonthlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
@@ -81,5 +82,10 @@ public class ExpenseController {
     @GetMapping("/summary/yearly")
     public ResponseEntity<YearlySummaryResponse> getYearlySummary(@RequestParam int year, @AuthenticationPrincipal String email){
         return ResponseEntity.ok(expenseService.getYearlySummary(email, year));
+    }
+
+    @GetMapping("/summary/category")
+    public ResponseEntity<List<CategorySummaryResponse>> getCategorySummary(@AuthenticationPrincipal String email){
+        return ResponseEntity.ok(expenseService.getCategorySummary(email));
     }
 }
