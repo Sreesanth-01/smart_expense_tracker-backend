@@ -26,13 +26,21 @@ public interface ExpenseRepo extends JpaRepository<Expense,Long>{
     List<Expense> findByUserAndCategory(User user, String category);
 
     @Query("""
-    SELECT COALESCE(SUM(e.amount),0),COUNT(e)
-    FROM Expense e
-    WHERE e.user=:user 
-        AND FUNCTION('YEAR',e.date)=:year
-        AND FUNCTION('MONTH',e.date)=:month
+            SELECT COALESCE(SUM(e.amount),0),COUNT(e)
+            FROM Expense e
+            WHERE e.user=:user 
+                AND FUNCTION('YEAR',e.date)=:year
+                AND FUNCTION('MONTH',e.date)=:month
     """)
     Object getMothlySummary(@Param("user") User user,@Param("year") int year,@Param("month") int month);
+
+    @Query("""
+            SELECT COALESCE(SUM(e.amount),0),COUNT(e)
+            FROM Expense e
+            WHERE e.user=:user
+                AND FUNCTION('YEAR',e.date)=:year
+    """)
+    Object getYearlySummary(@Param("user") User user, @Param("year") int year);
 
     
 }

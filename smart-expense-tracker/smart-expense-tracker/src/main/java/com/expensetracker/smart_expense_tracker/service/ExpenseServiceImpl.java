@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
 import com.expensetracker.smart_expense_tracker.dto.MonthlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
+import com.expensetracker.smart_expense_tracker.dto.YearlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.model.Expense;
 import com.expensetracker.smart_expense_tracker.model.User;
 import com.expensetracker.smart_expense_tracker.repository.ExpenseRepo;
@@ -109,5 +110,20 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         return new MonthlySummaryResponse(totalAmount, totalTransactions, averageDaily);
 
+    }
+
+    @Override
+    public YearlySummaryResponse getYearlySummary(String email, int year){
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        Object[] yearlySummary = (Object[]) expenseRepo.getYearlySummary(user, year);
+
+        double totalAmount = ((Number) yearlySummary[0]).doubleValue();
+        long totalTransactions = ((Number) yearlySummary[1]).longValue();
+
+        double averageMonthly = totalTransactions == 0
+            ? 0.0
+            : totalAmount/12;
+        
+            return new YearlySummaryResponse(totalAmount, totalTransactions, averageMonthly);
     }
 }
