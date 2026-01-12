@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
+import com.expensetracker.smart_expense_tracker.dto.MonthlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
 import com.expensetracker.smart_expense_tracker.model.Expense;
 import com.expensetracker.smart_expense_tracker.model.User;
@@ -92,5 +93,21 @@ public class ExpenseServiceImpl implements ExpenseService {
         List<Expense> list = expenseRepo.findByUserAndCategory(user,category);
 
         return list;
+    }
+
+    @Override
+    public MonthlySummaryResponse getMonthlySummary(String email, int year, int month){
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        Object[] monthlySummary =(Object[]) expenseRepo.getMothlySummary(user, year, month);
+
+        double totalAmount = ((Number) monthlySummary[0]).doubleValue();
+        long totalTransactions = ((Number) monthlySummary[1]).longValue();
+
+        double averageDaily = totalTransactions == 0
+            ? 0.0
+            : totalAmount/30;
+
+        return new MonthlySummaryResponse(totalAmount, totalTransactions, averageDaily);
+
     }
 }

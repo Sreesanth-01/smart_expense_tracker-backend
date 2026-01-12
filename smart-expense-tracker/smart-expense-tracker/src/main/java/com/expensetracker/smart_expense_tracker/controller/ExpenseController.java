@@ -3,10 +3,10 @@ package com.expensetracker.smart_expense_tracker.controller;
 import java.time.LocalDate;
 import java.util.List;
 
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
+import com.expensetracker.smart_expense_tracker.dto.MonthlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
 import com.expensetracker.smart_expense_tracker.model.Expense;
 import com.expensetracker.smart_expense_tracker.service.ExpenseServiceImpl;
@@ -70,5 +71,11 @@ public class ExpenseController {
     @GetMapping("/category/{category}")
     public ResponseEntity<List<Expense>> getByCategory(@PathVariable String category, @AuthenticationPrincipal String email){
         return ResponseEntity.ok(expenseService.getExpensesByCategory(email, category));
+    }
+
+    @GetMapping("/summary/monthly")
+    public ResponseEntity<MonthlySummaryResponse> getMonthlySummary(@RequestParam int year, @RequestParam int month, Authentication authentication){
+        String email = (String) authentication.getPrincipal();
+        return ResponseEntity.ok(expenseService.getMonthlySummary(email, year, month));
     }
 }
