@@ -32,7 +32,7 @@ public interface ExpenseRepo extends JpaRepository<Expense,Long>{
                 AND FUNCTION('YEAR',e.date)=:year
                 AND FUNCTION('MONTH',e.date)=:month
     """)
-    Object getMothlySummary(@Param("user") User user,@Param("year") int year,@Param("month") int month);
+    Object getMonthlySummary(@Param("user") User user,@Param("year") int year,@Param("month") int month);
 
     @Query("""
             SELECT COALESCE(SUM(e.amount),0),COUNT(e)

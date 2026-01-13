@@ -11,6 +11,7 @@ import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
 import com.expensetracker.smart_expense_tracker.dto.MonthlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
 import com.expensetracker.smart_expense_tracker.dto.YearlySummaryResponse;
+import com.expensetracker.smart_expense_tracker.exception.ResourceNotFoundException;
 import com.expensetracker.smart_expense_tracker.model.Expense;
 import com.expensetracker.smart_expense_tracker.model.User;
 import com.expensetracker.smart_expense_tracker.repository.ExpenseRepo;
@@ -31,7 +32,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public void addExpense(ExpenseRequest request, String email){
 
-        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
 
         Expense expense = new Expense();
         expense.setAmount(request.getAmount());
@@ -47,15 +48,15 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Page<Expense> getExpenses(String email,Pageable pageable){
 
-        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
 
         return expenseRepo.findByUser(user,pageable);
     }
 
     @Override
     public Expense updateExpense(long id,String email,UpdateExpenseRequest request){
-        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
-        Expense expense = expenseRepo.findByIdAndUser(id,user).orElseThrow(()-> new RuntimeException("Expense not found"));
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
+        Expense expense = expenseRepo.findByIdAndUser(id,user).orElseThrow(()-> new ResourceNotFoundException("Expense not found"));
 
         if(request.getAmount() != null){
             expense.setAmount(request.getAmount());
@@ -75,15 +76,15 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public void deleteExpense(long id, String email){
-        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
-        Expense expense = expenseRepo.findByIdAndUser(id, user).orElseThrow(()-> new RuntimeException("User not found"));
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
+        Expense expense = expenseRepo.findByIdAndUser(id, user).orElseThrow(()-> new ResourceNotFoundException("User not found"));
 
         expenseRepo.delete(expense);
     }
 
     @Override
     public List<Expense> getExpensesByDateRange(String email,LocalDate startDate,LocalDate endDate){
-        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
         List<Expense> list = expenseRepo.findByUserAndDateBetween(user,startDate,endDate);
 
         return list;
@@ -91,7 +92,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public List<Expense> getExpensesByCategory(String email,String category){
-        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
         List<Expense> list = expenseRepo.findByUserAndCategory(user,category);
 
         return list;
@@ -99,8 +100,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public MonthlySummaryResponse getMonthlySummary(String email, int year, int month){
-        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
-        Object[] monthlySummary =(Object[]) expenseRepo.getMothlySummary(user, year, month);
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
+        Object[] monthlySummary =(Object[]) expenseRepo.getMonthlySummary(user, year, month);
 
         double totalAmount = ((Number) monthlySummary[0]).doubleValue();
         long totalTransactions = ((Number) monthlySummary[1]).longValue();
@@ -115,7 +116,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public YearlySummaryResponse getYearlySummary(String email, int year){
-        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
         Object[] yearlySummary = (Object[]) expenseRepo.getYearlySummary(user, year);
 
         double totalAmount = ((Number) yearlySummary[0]).doubleValue();
@@ -130,7 +131,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public List<CategorySummaryResponse> getCategorySummary(String email){
-        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
         List<Object[]> rows = expenseRepo.getCategorySummary(user);
 
         return rows.stream()                                //stream() is modern version of for each loop.

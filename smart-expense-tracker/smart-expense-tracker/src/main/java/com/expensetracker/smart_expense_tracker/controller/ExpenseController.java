@@ -88,4 +88,6 @@ public class ExpenseController {
     public ResponseEntity<List<CategorySummaryResponse>> getCategorySummary(@AuthenticationPrincipal String email){
         return ResponseEntity.ok(expenseService.getCategorySummary(email));
     }
+
+    
 }
