@@ -14,7 +14,7 @@ public class SignUpRequest {
     @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "Password must not be empty")
     @Size(min = 6,message = "Password must be atleast 6 characters")
     private String password;
 }

@@ -25,6 +25,8 @@ import com.expensetracker.smart_expense_tracker.dto.YearlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.model.Expense;
 import com.expensetracker.smart_expense_tracker.service.ExpenseServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/expenses")
 public class ExpenseController {
@@ -36,7 +38,7 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addExpense(@RequestBody ExpenseRequest request, @AuthenticationPrincipal String email){
+    public ResponseEntity<String> addExpense(@Valid @RequestBody ExpenseRequest request, @AuthenticationPrincipal String email){
 
         expenseService.addExpense(request, email);
         return ResponseEntity.ok("Expense added successfully");

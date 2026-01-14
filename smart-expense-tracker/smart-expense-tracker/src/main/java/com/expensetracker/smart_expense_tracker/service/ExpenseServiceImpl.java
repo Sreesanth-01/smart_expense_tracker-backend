@@ -77,7 +77,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public void deleteExpense(long id, String email){
         User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
-        Expense expense = expenseRepo.findByIdAndUser(id, user).orElseThrow(()-> new ResourceNotFoundException("User not found"));
+        Expense expense = expenseRepo.findByIdAndUser(id, user).orElseThrow(()-> new ResourceNotFoundException("Expense not found"));
 
         expenseRepo.delete(expense);
     }
