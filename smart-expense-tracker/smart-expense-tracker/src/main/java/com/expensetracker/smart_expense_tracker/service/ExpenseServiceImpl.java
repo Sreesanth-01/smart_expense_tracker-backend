@@ -2,6 +2,8 @@ package com.expensetracker.smart_expense_tracker.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ import com.expensetracker.smart_expense_tracker.repository.UserRepo;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
+    private static final Logger log = LoggerFactory.getLogger(ExpenseServiceImpl.class);
+
+
     private final ExpenseRepo expenseRepo;
     private final UserRepo userRepo;
 
@@ -32,6 +37,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public void addExpense(ExpenseRequest request, String email){
 
+        log.info("Adding expense for user: {}",email);
+
         User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
 
         Expense expense = new Expense();
@@ -42,6 +49,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setUser(user);
 
         expenseRepo.save(expense);
+        log.info("Expense added successfully for user: {}",email);
 
     }
 
@@ -55,6 +63,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public Expense updateExpense(long id,String email,UpdateExpenseRequest request){
+        log.info("Updating expense id {} for user {}",id,email);
+
         User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
         Expense expense = expenseRepo.findByIdAndUser(id,user).orElseThrow(()-> new ResourceNotFoundException("Expense not found"));
 
@@ -71,15 +81,23 @@ public class ExpenseServiceImpl implements ExpenseService {
             expense.setDescription(request.getDescription());
         }
 
-        return expenseRepo.save(expense);
+        Expense updatedExpense = expenseRepo.save(expense);
+        log.info("Expense id {} updated successfully for user {}",id,email);
+
+        return updatedExpense;
+
     }
 
     @Override
     public void deleteExpense(long id, String email){
+        log.info("Deleting expense id {} for user {}",id,email);
+
         User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
         Expense expense = expenseRepo.findByIdAndUser(id, user).orElseThrow(()-> new ResourceNotFoundException("Expense not found"));
 
         expenseRepo.delete(expense);
+
+        log.info("Expense id {} deleted successfully for user {}",id,email);
     }
 
     @Override
