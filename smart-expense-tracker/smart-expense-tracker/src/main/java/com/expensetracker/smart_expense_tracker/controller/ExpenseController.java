@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.expensetracker.smart_expense_tracker.dto.ApiResponse;
 import com.expensetracker.smart_expense_tracker.dto.CategorySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
 import com.expensetracker.smart_expense_tracker.dto.MonthlySummaryResponse;
@@ -38,42 +40,43 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addExpense(@Valid @RequestBody ExpenseRequest request, @AuthenticationPrincipal String email){
+    public ResponseEntity<ApiResponse<Void>> addExpense(@Valid @RequestBody ExpenseRequest request, @AuthenticationPrincipal String email){
 
         expenseService.addExpense(request, email);
-        return ResponseEntity.ok("Expense added successfully");
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(new ApiResponse<>(true, "Expense added successfully", null));
     }
 
     @GetMapping
-    public ResponseEntity<Page<Expense>> getExpenses(@AuthenticationPrincipal String email,Pageable pageable){
+    public ResponseEntity<ApiResponse<Page<Expense>>> getExpenses(@AuthenticationPrincipal String email,Pageable pageable){
 
         
         Page<Expense> page = expenseService.getExpenses(email,pageable);
-        return ResponseEntity.ok(page);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Expenses retrieved successfully", page));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateExpense(@PathVariable long id, @RequestBody UpdateExpenseRequest request, @AuthenticationPrincipal String email){
+    public ResponseEntity<ApiResponse<Void>> updateExpense(@PathVariable long id, @RequestBody UpdateExpenseRequest request, @AuthenticationPrincipal String email){
         expenseService.updateExpense(id, email, request);
 
-        return ResponseEntity.ok("Update Successfull");
+        return ResponseEntity.ok(new ApiResponse<>(true, "Expense Updated successfully", null));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteExpense(@PathVariable long id,@AuthenticationPrincipal String email){
+    public ResponseEntity<ApiResponse<Void>> deleteExpense(@PathVariable long id,@AuthenticationPrincipal String email){
         expenseService.deleteExpense(id, email);
 
-        return ResponseEntity.ok("Deleted successfully");
+        return ResponseEntity.ok(new ApiResponse<>(true, "Expense Deleted successfully", null));
     }
 
     @GetMapping("/date-range")
-    public ResponseEntity<List<Expense>> getByDateRange(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate,@AuthenticationPrincipal String email){
-        return ResponseEntity.ok(expenseService.getExpensesByDateRange(email, startDate, endDate));
+    public ResponseEntity<ApiResponse<List<Expense>>> getByDateRange(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate,@AuthenticationPrincipal String email){
+        return ResponseEntity.ok(new ApiResponse<>(false, "Expenses retrieved successfully", expenseService.getExpensesByDateRange(email, startDate, endDate)));
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<Expense>> getByCategory(@PathVariable String category, @AuthenticationPrincipal String email){
-        return ResponseEntity.ok(expenseService.getExpensesByCategory(email, category));
+    public ResponseEntity<ApiResponse<List<Expense>>> getByCategory(@PathVariable String category, @AuthenticationPrincipal String email){
+        return ResponseEntity.ok(new ApiResponse<>(true, "Expenses retrieved successfully",expenseService.getExpensesByCategory(email, category)));
     }
 
     @GetMapping("/summary/monthly")
