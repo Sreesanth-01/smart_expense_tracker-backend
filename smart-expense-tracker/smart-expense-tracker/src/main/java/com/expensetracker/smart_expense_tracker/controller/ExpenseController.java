@@ -3,6 +3,8 @@ package com.expensetracker.smart_expense_tracker.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,8 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/expenses")
 public class ExpenseController {
+
+    private static final Logger log = LoggerFactory.getLogger(ExpenseController.class);
     
     private final ExpenseServiceImpl expenseService;
 
@@ -41,7 +45,7 @@ public class ExpenseController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> addExpense(@Valid @RequestBody ExpenseRequest request, @AuthenticationPrincipal String email){
-
+        log.info("Recieved POST/api/expenses request");
         expenseService.addExpense(request, email);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(new ApiResponse<>(true, "Expense added successfully", null));
@@ -49,7 +53,7 @@ public class ExpenseController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<Page<Expense>>> getExpenses(@AuthenticationPrincipal String email,Pageable pageable){
-
+        log.info("Recieved GET/api/expenses request");
         
         Page<Expense> page = expenseService.getExpenses(email,pageable);
         return ResponseEntity.ok(new ApiResponse<>(true, "Expenses retrieved successfully", page));
@@ -57,6 +61,8 @@ public class ExpenseController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> updateExpense(@PathVariable long id, @RequestBody UpdateExpenseRequest request, @AuthenticationPrincipal String email){
+        log.info("Recieved PUT/api/expenses/{} request",id);
+        
         expenseService.updateExpense(id, email, request);
 
         return ResponseEntity.ok(new ApiResponse<>(true, "Expense Updated successfully", null));
@@ -64,6 +70,8 @@ public class ExpenseController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteExpense(@PathVariable long id,@AuthenticationPrincipal String email){
+        log.info("Recieved DELETE/api/expenses/{} request",id);
+        
         expenseService.deleteExpense(id, email);
 
         return ResponseEntity.ok(new ApiResponse<>(true, "Expense Deleted successfully", null));
@@ -71,26 +79,36 @@ public class ExpenseController {
 
     @GetMapping("/date-range")
     public ResponseEntity<ApiResponse<List<Expense>>> getByDateRange(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate,@AuthenticationPrincipal String email){
+        log.info("Recieved GET/api/expenses/date-range request");
+        
         return ResponseEntity.ok(new ApiResponse<>(false, "Expenses retrieved successfully", expenseService.getExpensesByDateRange(email, startDate, endDate)));
     }
 
     @GetMapping("/category/{category}")
     public ResponseEntity<ApiResponse<List<Expense>>> getByCategory(@PathVariable String category, @AuthenticationPrincipal String email){
+        log.info("Recieved GET/api/expenses/category/{} request",category);
+        
         return ResponseEntity.ok(new ApiResponse<>(true, "Expenses retrieved successfully",expenseService.getExpensesByCategory(email, category)));
     }
 
     @GetMapping("/summary/monthly")
     public ResponseEntity<MonthlySummaryResponse> getMonthlySummary(@RequestParam int year, @RequestParam int month, @AuthenticationPrincipal String email){
+        log.info("Recieved GET/api/expenses/summary/monthly request");
+       
         return ResponseEntity.ok(expenseService.getMonthlySummary(email, year, month));
     }
 
     @GetMapping("/summary/yearly")
     public ResponseEntity<YearlySummaryResponse> getYearlySummary(@RequestParam int year, @AuthenticationPrincipal String email){
+        log.info("Recieved GET/api/expenses/summary/yearly request");
+        
         return ResponseEntity.ok(expenseService.getYearlySummary(email, year));
     }
 
     @GetMapping("/summary/category")
     public ResponseEntity<List<CategorySummaryResponse>> getCategorySummary(@AuthenticationPrincipal String email){
+        log.info("Recieved GET/api/expenses/summary/category request");
+        
         return ResponseEntity.ok(expenseService.getCategorySummary(email));
     }
 
