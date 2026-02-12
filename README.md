@@ -5,5 +5,5 @@ Description : This project will include User Authentication, Expense tracking, B
 
 Tech stack : SpringBoot(Backend),ReactJs(Frontend), MySQL(DB),Tailwind CSS.
 
-Status : Backend development in progress...
+Status : Backend development done
 
