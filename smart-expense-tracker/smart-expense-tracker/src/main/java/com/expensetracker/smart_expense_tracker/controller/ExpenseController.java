@@ -85,10 +85,10 @@ public class ExpenseController {
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<ApiResponse<List<Expense>>> getByCategory(@PathVariable String category, @AuthenticationPrincipal String email){
+    public ResponseEntity<ApiResponse<Page<Expense>>> getByCategory(@PathVariable String category, @AuthenticationPrincipal String email,Pageable pageable){
         log.info("Recieved GET/api/expenses/category/{} request",category);
         
-        return ResponseEntity.ok(new ApiResponse<>(true, "Expenses retrieved successfully",expenseService.getExpensesByCategory(email, category)));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Expenses retrieved successfully",expenseService.getExpensesByCategory(email, category,pageable)));
     }
 
     @GetMapping("/summary/monthly")

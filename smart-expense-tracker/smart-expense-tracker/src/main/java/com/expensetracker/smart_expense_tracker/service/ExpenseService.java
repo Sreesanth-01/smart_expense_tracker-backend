@@ -24,7 +24,7 @@ public interface ExpenseService {
 
     List<Expense> getExpensesByDateRange(String email,LocalDate startDate,LocalDate endDate);
 
-    List<Expense> getExpensesByCategory(String email,String category);
+    Page<Expense> getExpensesByCategory(String email,String category,Pageable pageable);
 
     MonthlySummaryResponse getMonthlySummary(String email, int year, int month);
 

@@ -23,7 +23,7 @@ public interface ExpenseRepo extends JpaRepository<Expense,Long>{
 
     List<Expense> findByUserAndDateBetween(User user, LocalDate starDate, LocalDate endDate);
 
-    List<Expense> findByUserAndCategory(User user, String category);
+    Page<Expense> findByUserAndCategory(User user, String category,Pageable pageable);
 
     @Query("""
             SELECT COALESCE(SUM(e.amount),0),COUNT(e)

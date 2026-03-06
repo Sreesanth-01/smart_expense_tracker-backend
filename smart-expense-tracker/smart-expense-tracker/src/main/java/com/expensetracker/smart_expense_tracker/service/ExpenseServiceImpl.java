@@ -109,11 +109,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> getExpensesByCategory(String email,String category){
+    public Page<Expense> getExpensesByCategory(String email,String category,Pageable pageable){
         User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
-        List<Expense> list = expenseRepo.findByUserAndCategory(user,category);
+        Page<Expense> page = expenseRepo.findByUserAndCategory(user,category,pageable);
 
-        return list;
+        return page;
     }
 
     @Override
