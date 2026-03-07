@@ -22,7 +22,7 @@ public interface ExpenseService {
 
     void deleteExpense(long id,String email);
 
-    List<Expense> getExpensesByDateRange(String email,LocalDate startDate,LocalDate endDate);
+    Page<Expense> getExpensesByDateRange(String email,LocalDate startDate,LocalDate endDate,Pageable pageable);
 
     Page<Expense> getExpensesByCategory(String email,String category,Pageable pageable);
 

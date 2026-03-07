@@ -78,10 +78,10 @@ public class ExpenseController {
     }
 
     @GetMapping("/date-range")
-    public ResponseEntity<ApiResponse<List<Expense>>> getByDateRange(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate,@AuthenticationPrincipal String email){
+    public ResponseEntity<ApiResponse<Page<Expense>>> getByDateRange(@RequestParam LocalDate startDate,@RequestParam LocalDate endDate,@AuthenticationPrincipal String email,Pageable pageable){
         log.info("Recieved GET/api/expenses/date-range request");
         
-        return ResponseEntity.ok(new ApiResponse<>(false, "Expenses retrieved successfully", expenseService.getExpensesByDateRange(email, startDate, endDate)));
+        return ResponseEntity.ok(new ApiResponse<>(false, "Expenses retrieved successfully", expenseService.getExpensesByDateRange(email, startDate, endDate,pageable)));
     }
 
     @GetMapping("/category/{category}")

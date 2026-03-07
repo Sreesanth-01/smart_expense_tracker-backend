@@ -101,11 +101,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> getExpensesByDateRange(String email,LocalDate startDate,LocalDate endDate){
+    public Page<Expense> getExpensesByDateRange(String email,LocalDate startDate,LocalDate endDate,Pageable pageable){
         User user = userRepo.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
-        List<Expense> list = expenseRepo.findByUserAndDateBetween(user,startDate,endDate);
+        Page<Expense> page = expenseRepo.findByUserAndDateBetween(user,startDate,endDate,pageable);
 
-        return list;
+        return page;
     }
 
     @Override
