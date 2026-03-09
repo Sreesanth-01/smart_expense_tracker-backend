@@ -50,5 +50,13 @@ public interface ExpenseRepo extends JpaRepository<Expense,Long>{
             """)
     List<Object[]> getCategorySummary(@Param("user") User user);
 
+    @Query("""
+            SELECT e.date,COALESCE(SUM(e.amount),0)
+            FROM Expense e
+            WHERE e.user=:user
+            GROUP BY e.date
+            """)
+    List<Object[]> getDailySummary(@Param("user") User user);
+
     
 }

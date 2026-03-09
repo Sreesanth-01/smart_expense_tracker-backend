@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.expensetracker.smart_expense_tracker.dto.ApiResponse;
 import com.expensetracker.smart_expense_tracker.dto.CategorySummaryResponse;
+import com.expensetracker.smart_expense_tracker.dto.DailySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
 import com.expensetracker.smart_expense_tracker.dto.MonthlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
@@ -112,5 +113,12 @@ public class ExpenseController {
         return ResponseEntity.ok(expenseService.getCategorySummary(email));
     }
 
+    @GetMapping("/summary/daily")
+    public ResponseEntity<List<DailySummaryResponse>> getDailySummary(@AuthenticationPrincipal String email){
+        log.info(("Recieved GET/api/expenses/summary/daily request"));
+
+        return ResponseEntity.ok(expenseService.getDailySummary(email));
+    }
     
 }
+wq

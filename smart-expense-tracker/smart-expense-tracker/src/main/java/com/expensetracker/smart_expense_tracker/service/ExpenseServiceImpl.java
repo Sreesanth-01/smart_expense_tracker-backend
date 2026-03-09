@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.expensetracker.smart_expense_tracker.dto.CategorySummaryResponse;
+import com.expensetracker.smart_expense_tracker.dto.DailySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
 import com.expensetracker.smart_expense_tracker.dto.MonthlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
@@ -157,5 +158,15 @@ public class ExpenseServiceImpl implements ExpenseService {
                     (String) row[0],                        //here,each row is converted to a CategorySummaryResponse dto.
                     ((Number) row[1]).doubleValue()
                 )).toList();
+    }
+
+    @Override 
+    public List<DailySummaryResponse> getDailySummary(String email){
+        User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+
+        List<Object[]> dailySpends = expenseRepo. getDailySummary(user);
+
+        return dailySpends.stream()
+                .map(row -> new DailySummaryResponse((LocalDate) row[0], ((Number)row[1]).doubleValue())).toList();
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.expensetracker.smart_expense_tracker.dto.CategorySummaryResponse;
+import com.expensetracker.smart_expense_tracker.dto.DailySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.ExpenseRequest;
 import com.expensetracker.smart_expense_tracker.dto.MonthlySummaryResponse;
 import com.expensetracker.smart_expense_tracker.dto.UpdateExpenseRequest;
@@ -31,6 +32,8 @@ public interface ExpenseService {
     YearlySummaryResponse getYearlySummary(String email, int year);
 
     List<CategorySummaryResponse> getCategorySummary(String email);
+
+    List<DailySummaryResponse> getDailySummary(String email);
 
 
 }
