@@ -45,7 +45,12 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense expense = new Expense();
         expense.setAmount(request.getAmount());
         expense.setCategory(request.getCategory());
-        expense.setDate(request.getDate());
+        if(request.getDate()==null){
+            expense.setDate(LocalDate.now());
+        }
+        else{
+            expense.setDate(request.getDate());
+        }
         expense.setDescription(request.getDescription());
         expense.setUser(user);
 
