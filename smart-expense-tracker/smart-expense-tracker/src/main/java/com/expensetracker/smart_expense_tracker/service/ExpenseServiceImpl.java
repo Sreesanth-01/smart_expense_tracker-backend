@@ -169,9 +169,12 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<DailySummaryResponse> getDailySummary(String email){
         User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
 
-        List<Object[]> dailySpends = expenseRepo. getDailySummary(user);
+        LocalDate startDate = LocalDate.now().minusDays(6);
+
+        List<Object[]> dailySpends = expenseRepo. getDailySummary(user,startDate);
 
         return dailySpends.stream()
                 .map(row -> new DailySummaryResponse((LocalDate) row[0], ((Number)row[1]).doubleValue())).toList();
+
     }
 }
