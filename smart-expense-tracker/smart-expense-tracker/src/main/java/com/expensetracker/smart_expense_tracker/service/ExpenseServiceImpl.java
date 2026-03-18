@@ -1,6 +1,9 @@
 package com.expensetracker.smart_expense_tracker.service;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,8 +176,21 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         List<Object[]> dailySpends = expenseRepo. getDailySummary(user,startDate);
 
-        return dailySpends.stream()
-                .map(row -> new DailySummaryResponse((LocalDate) row[0], ((Number)row[1]).doubleValue())).toList();
+        Map<LocalDate,Double> map = new HashMap<>();
 
+        for(Object[] row:dailySpends){
+            LocalDate date = (LocalDate)row[0];
+            Double amnt = ((Number)row[1]).doubleValue();
+            map.put(date, amnt);
+        }
+
+        List<DailySummaryResponse> result = new ArrayList<>();
+
+        for(int i=0;i<7;i++){
+            LocalDate date = startDate.plusDays(i);
+            double total = map.getOrDefault(date, 0.0);
+            result.add(new DailySummaryResponse(date, total));
+        }
+        return result;
     }
 }
